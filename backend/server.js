@@ -27,13 +27,10 @@ const allowedOrigins = [
 
 app.use(
     cors({
-        origin: function (origin, callback) {
-            if (!origin || allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error("Not allowed by CORS"));
-            }
-        },
+        origin: [
+            "http://localhost:3000",
+            "https://studysync-9fzqlknqq-m29766s-projects.vercel.app",
+        ],
         credentials: true,
     })
 );
@@ -54,7 +51,10 @@ app.use("/api/bookings", bookingRoutes);
 
 const io = new Server(server, {
     cors: {
-        origin: allowedOrigins,
+        origin: [
+            "http://localhost:3000",
+            "https://studysync-9fzqlknqq-m29766s-projects.vercel.app",
+        ],
         methods: ["GET", "POST", "PATCH", "DELETE"],
     },
 });

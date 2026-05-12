@@ -7,7 +7,7 @@ function StudyRoom() {
     const roomId = "main-study-room";
 
     const socket = useMemo(() => {
-        return io(process.env.REACT_APP_SOCKET_URL || "http://localhost:5000");
+        return io("https://studysync-ngqu.onrender.com");
     }, []);
 
     useEffect(() => {
