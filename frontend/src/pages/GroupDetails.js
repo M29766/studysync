@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
     ArrowLeft,
@@ -21,7 +21,7 @@ function GroupDetails() {
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
 
-    const fetchGroup = async () => {
+    const fetchGroup = useCallback(async () => {
         try {
             const res = await API.get(`/api/groups/${id}`);
             setGroup(res.data);
@@ -29,16 +29,21 @@ function GroupDetails() {
             alert("Group not found");
             navigate("/groups");
         }
-    };
+    }, [id, navigate]);
 
-    const fetchResources = async () => {
+    const fetchResources = useCallback(async () => {
         try {
             const res = await API.get(`/api/resources/${id}`);
             setResources(res.data);
         } catch (error) {
             alert("Failed to fetch resources");
         }
-    };
+    }, [id]);
+
+    useEffect(() => {
+        fetchGroup();
+        fetchResources();
+    }, [fetchGroup, fetchResources]);
 
     const uploadFile = async (event) => {
         event.preventDefault();
@@ -96,11 +101,6 @@ function GroupDetails() {
             alert(link);
         }
     };
-
-    useEffect(() => {
-        fetchGroup();
-        fetchResources();
-    }, [id]);
 
     if (!group) {
         return (
