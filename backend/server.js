@@ -19,9 +19,21 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
+const allowedOrigins = [
+    "http://localhost:3000",
+    process.env.CLIENT_URL,
+    "https://studysync-9fzqlknqq-m29766s-projects.vercel.app",
+];
+
 app.use(
     cors({
-        origin: process.env.CLIENT_URL,
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
         credentials: true,
     })
 );
@@ -42,7 +54,7 @@ app.use("/api/bookings", bookingRoutes);
 
 const io = new Server(server, {
     cors: {
-        origin: process.env.CLIENT_URL,
+        origin: allowedOrigins,
         methods: ["GET", "POST", "PATCH", "DELETE"],
     },
 });
